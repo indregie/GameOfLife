@@ -52,4 +52,32 @@ public class DrawingService
     {
         return !board[i,j];
     }
+
+    private int CalculateNeighbours(bool[,] board, int i, int j)
+    {
+        int[] offsetX = { -1, 0, 1, 1, 1, 0, -1, -1 };
+        int[] offsetY = { 1, 1, 1, 0, -1, -1, -1, 0 };
+        int count = 0;
+
+        for (int k = 0; k < offsetX.Length; k++)
+        {
+            int x = i + offsetX[k]; 
+            int y = j + offsetY[k];
+
+            if (x < 0 || y < 0)
+            {
+                continue;
+            }
+
+            if ( x >= board.GetLength(0) || y >= board.GetLength(1))
+            {
+                continue;
+            }
+
+            bool value = board[x, y];
+            count += value ? 1: 0;
+        }
+        return count;
+
+    }
 }
