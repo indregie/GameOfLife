@@ -1,22 +1,28 @@
 ﻿
+using GameOfLife;
+
 Console.WriteLine("Welcome to the game of life!\nPlease write down the maximum height of the desk input:");
 try
 {
-    string? inputDeskHeight = Console.ReadLine();
+    string? inputBoardHeight = Console.ReadLine();
 
     Console.WriteLine("Please write down the maximum lenght of the desk input:");
-    string? inputDeskLenght = Console.ReadLine();
+    string? inputBoardLenght = Console.ReadLine();
 
-    if (string.IsNullOrEmpty(inputDeskHeight) || string.IsNullOrEmpty(inputDeskLenght))
+    if (string.IsNullOrEmpty(inputBoardHeight) || string.IsNullOrEmpty(inputBoardLenght))
     {
         throw new Exception("Please provide valid input.");
     }
 
-    int deskHeight = int.Parse(inputDeskHeight!);
-    int deskLenght = int.Parse(inputDeskLenght!);
+    int boardHeight = int.Parse(inputBoardHeight!);
+    int boardLenght = int.Parse(inputBoardLenght!);
 
-    int[,] board = new int[deskHeight, deskLenght];
-    Console.WriteLine($"board: {deskHeight}, {deskLenght}");
+    //int[,] board = new int[deskHeight, deskLenght];
+    Console.WriteLine($"Board: {boardHeight}, {boardLenght}");
+
+    DrawingService drawing = new DrawingService();
+    drawing.DrawBoard(boardHeight, boardLenght);
+
 }
 catch (Exception ex) 
 {
