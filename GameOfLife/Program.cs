@@ -20,13 +20,13 @@ try
 
     DrawingService drawing = new DrawingService();
     var board = drawing.GenerateRandomBoard(boardHeight, boardLenght);
+
     while (true)
     {
         drawing.DrawBoard(board);
         Thread.Sleep(1000);
         board = drawing.UpdateBoard(board);
     }
-
 }
 catch (Exception ex) 
 {

@@ -50,7 +50,17 @@ public class DrawingService
 
     private bool CalculateCell(bool[,] board, int i, int j)
     {
-        return !board[i,j];
+        int numOfNeighbours = CalculateNeighbours(board, i, j);
+        
+        if (numOfNeighbours < 2)
+        {
+            return false;
+        }
+        if (numOfNeighbours > 3)
+        {
+            return false;
+        }
+        return true;
     }
 
     private int CalculateNeighbours(bool[,] board, int i, int j)
@@ -78,6 +88,5 @@ public class DrawingService
             count += value ? 1: 0;
         }
         return count;
-
     }
 }
