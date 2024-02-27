@@ -34,4 +34,22 @@ public class DrawingService
         }
     }
 
+    public bool[,] UpdateBoard(bool[,] board)
+    {
+        bool[,] updatedBoard = new bool[board.GetLength(0), board.GetLength(1)];
+
+        for (int i = 0; i < board.GetLength(0); i++)
+        {
+            for (int j = 0; j < board.GetLength(1); j++)
+            {
+                updatedBoard[i, j] = CalculateCell(board, i, j);
+            }
+        }
+        return updatedBoard;
+    }
+
+    private bool CalculateCell(bool[,] board, int i, int j)
+    {
+        return !board[i,j];
+    }
 }

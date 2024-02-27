@@ -1,5 +1,4 @@
-﻿
-using GameOfLife;
+﻿using GameOfLife;
 
 Console.WriteLine("Welcome to the game of life!\nPlease write down the maximum height of the desk input:");
 try
@@ -17,15 +16,16 @@ try
     int boardHeight = int.Parse(inputBoardHeight!);
     int boardLenght = int.Parse(inputBoardLenght!);
 
-    //int[,] board = new int[deskHeight, deskLenght];
     Console.WriteLine($"Board: {boardHeight}, {boardLenght}");
 
     DrawingService drawing = new DrawingService();
     var board = drawing.GenerateRandomBoard(boardHeight, boardLenght);
-    drawing.DrawBoard(board);
-
-    Console.ReadLine();
-
+    while (true)
+    {
+        drawing.DrawBoard(board);
+        Thread.Sleep(1000);
+        board = drawing.UpdateBoard(board);
+    }
 
 }
 catch (Exception ex) 
