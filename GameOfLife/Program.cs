@@ -21,7 +21,11 @@ try
     Console.WriteLine($"Board: {boardHeight}, {boardLenght}");
 
     DrawingService drawing = new DrawingService();
-    drawing.DrawBoard(boardHeight, boardLenght);
+    var board = drawing.GenerateRandomBoard(boardHeight, boardLenght);
+    drawing.DrawBoard(board);
+
+    Console.ReadLine();
+
 
 }
 catch (Exception ex) 
