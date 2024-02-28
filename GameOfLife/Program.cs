@@ -1,16 +1,16 @@
 ﻿using GameOfLife;
 
-Console.WriteLine("Welcome to the game of life!\nPlease write down the maximum height of the desk input:");
+Console.WriteLine("Welcome to the game of life!\nPlease write down the maximum height of your game board:");
 try
 {
     string? inputBoardHeight = Console.ReadLine();
 
-    Console.WriteLine("Please write down the maximum lenght of the desk input:");
+    Console.WriteLine("Please write down the maximum lenght of your game board:");
     string? inputBoardLenght = Console.ReadLine();
 
     if (string.IsNullOrEmpty(inputBoardHeight) || string.IsNullOrEmpty(inputBoardLenght))
     {
-        throw new Exception("Please provide valid input.");
+        throw new Exception("Value provided can not be empty.");
     }
 
     int boardHeight = int.Parse(inputBoardHeight!);

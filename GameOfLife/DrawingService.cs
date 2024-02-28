@@ -1,10 +1,18 @@
 ﻿namespace GameOfLife;
-
+/// <summary>
+/// Represents a service for generating, drawing and updating a Game of life board.
+/// </summary>
 public class DrawingService
 {
     private double _probability = 0.8;
-    Random _random = new Random();
+    private Random _random = new Random();
 
+    /// <summary>
+    /// Generates a random Game of life board with specific dimensions.
+    /// </summary>
+    /// <param name="boardHeight">The height of the board.</param>
+    /// <param name="boardLenght">The length of the board.</param>
+    /// <returns>Randomly generated initial Game of life board.</returns>
     public bool[,] GenerateRandomBoard(int boardHeight, int boardLenght)
     {
         bool[,] board = new bool[boardHeight, boardLenght];
@@ -20,6 +28,10 @@ public class DrawingService
         return board;
     }
 
+    /// <summary>
+    /// Draws Game of life board on the console.
+    /// </summary>
+    /// <param name="board">Board to be drawn.</param>
     public void DrawBoard(bool[,] board)
     {
         Console.Clear();
@@ -34,6 +46,11 @@ public class DrawingService
         }
     }
 
+    /// <summary>
+    /// Updates board following the rules of Game of life.
+    /// </summary>
+    /// <param name="board">Board to be updated.</param>
+    /// <returns>Updated board</returns>
     public bool[,] UpdateBoard(bool[,] board)
     {
         bool[,] updatedBoard = new bool[board.GetLength(0), board.GetLength(1)];
@@ -48,6 +65,13 @@ public class DrawingService
         return updatedBoard;
     }
 
+    /// <summary>
+    /// Calculates the upcoming state of each cell in given Game of life board.
+    /// </summary>
+    /// <param name="board">Board to be updated.</param>
+    /// <param name="i">X offset of the cell.</param>
+    /// <param name="j">Y offset of the cell.</param>
+    /// <returns>The next state of each cell in the board (dead or alive)</returns>
     private bool CalculateCell(bool[,] board, int i, int j)
     {
         int numOfNeighbours = CalculateNeighbours(board, i, j);
@@ -63,6 +87,13 @@ public class DrawingService
         return true;
     }
 
+    /// <summary>
+    /// Calculates the number of alive cells (of bool value true) surrounding the given cell.
+    /// </summary>
+    /// <param name="board">Given board of the game.</param>
+    /// <param name="i">X offset of the cell.</param>
+    /// <param name="j">Y offset of the cell.</param>
+    /// <returns>Number of alive cells surrounding given cell.</returns>
     private int CalculateNeighbours(bool[,] board, int i, int j)
     {
         int[] offsetX = { -1, 0, 1, 1, 1, 0, -1, -1 };
