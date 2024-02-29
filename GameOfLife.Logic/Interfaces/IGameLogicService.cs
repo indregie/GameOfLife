@@ -4,5 +4,6 @@
     {
         bool[,] GenerateRandomBoard(int boardHeight, int boardLenght);
         bool[,] UpdateBoard(bool[,] board);
+        int CalculateAliveCells(bool[,] board);
     }
 }

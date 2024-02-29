@@ -104,4 +104,26 @@ public class GameLogicService : IGameLogicService
         }
         return count;
     }
+
+    /// <summary>
+    /// Calculates the number of alive cells (of bool value true) on given board.
+    /// </summary>
+    /// <param name="board">Given board of the game.</param>
+    /// <returns>Number of alive cells on the current board.</returns>
+    public int CalculateAliveCells(bool[,] board)
+    {
+        int count = 0;
+
+        for (int i = 0; i < board.GetLength(0); i++)
+        {
+            for (int j = 0; j < board.GetLength(1); j++)
+            {
+                if (board[i, j])
+                {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
 }
