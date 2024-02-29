@@ -5,7 +5,12 @@ VisualStudioVersion = 17.9.34616.47
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GameOfLife.UI", "GameOfLife\GameOfLife.UI.csproj", "{C23584AB-36B3-405E-A60F-B70BD666113E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameOfLife.Logic", "GameOfLife.Logic\GameOfLife.Logic.csproj", "{63A10BC5-2EE1-49EA-B185-36962455D23B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GameOfLife.Logic", "GameOfLife.Logic\GameOfLife.Logic.csproj", "{63A10BC5-2EE1-49EA-B185-36962455D23B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7DD7CB46-B9C6-4382-A1E5-57B2AAF33F79}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
