@@ -3,24 +3,27 @@ using GameOfLife.Logic.Interfaces;
 using GameOfLife.UI;
 using GameOfLife.UI.Interfaces;
 
-Console.WriteLine("Welcome to the game of life!\nPlease choose what you want to do next by entering 1, 2 or 3.");
-Console.WriteLine("1. Start a new game.");
-Console.WriteLine("2. Load game from file.");
-Console.WriteLine("3. Quit the application.");
-string? option = Console.ReadLine();
-
-switch (option)
+while (true)
 {
-    case "1":
-        NewGame();
-        break;
-    case "2":
-        break;
-    case "3":
-        return;
-    default:
-        Console.WriteLine("Please choose between 1, 2 or 3.");
-        break;
+    Console.WriteLine("Welcome to the game of life!\nPlease choose what you want to do next by entering 1, 2 or 3.");
+    Console.WriteLine("1. Start a new game.");
+    Console.WriteLine("2. Load game from file.");
+    Console.WriteLine("3. Quit the application.");
+    string? option = Console.ReadLine();
+
+    switch (option)
+    {
+        case "1":
+            NewGame();
+            break;
+        case "2":
+            break;
+        case "3":
+            return;
+        default:
+            Console.WriteLine("Please choose between 1, 2 or 3.");
+            break;
+    }
 }
 
 void NewGame()
