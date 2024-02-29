@@ -1,5 +1,7 @@
 ﻿using GameOfLife.Logic;
+using GameOfLife.Logic.Interfaces;
 using GameOfLife.UI;
+using GameOfLife.UI.Interfaces;
 
 Console.WriteLine("Welcome to the game of life!\nPlease write down the maximum height of your game board:");
 try
@@ -19,10 +21,10 @@ try
 
     Console.WriteLine($"Board: {boardHeight}, {boardLenght}");
 
-    GameLogicService logic = new GameLogicService();
+    IGameLogicService logic = new GameLogicService();
     var board = logic.GenerateRandomBoard(boardHeight, boardLenght);
-    DrawingService drawing = new DrawingService();
-
+    IDrawingService drawing = new DrawingService();
+    
     while (true)
     {
         drawing.DrawBoard(board);

@@ -1,8 +1,10 @@
-﻿namespace GameOfLife.Logic;
+﻿using GameOfLife.Logic.Interfaces;
+
+namespace GameOfLife.Logic;
 /// <summary>
 /// Represents a service for generating, drawing and updating a Game of life board.
 /// </summary>
-public class GameLogicService
+public class GameLogicService : IGameLogicService
 {
     private double _probability = 0.8;
     private Random _random = new Random();

@@ -1,8 +1,10 @@
-﻿namespace GameOfLife.UI;
+﻿using GameOfLife.UI.Interfaces;
+
+namespace GameOfLife.UI;
 /// <summary>
 /// Represents a service for generating, drawing and updating a Game of life board.
 /// </summary>
-public class DrawingService
+public class DrawingService : IDrawingService
 {
     /// <summary>
     /// Draws Game of life board on the console.
