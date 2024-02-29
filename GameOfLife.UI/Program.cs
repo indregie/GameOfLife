@@ -28,7 +28,6 @@ while (true)
 
 void NewGame()
 {
-    Console.Clear();
     Console.WriteLine("Please write down the maximum height of your game board:");
     try
     {
@@ -47,41 +46,19 @@ void NewGame()
 
         Console.WriteLine($"Board: {boardHeight}, {boardLenght}");
 
+        IGameLogicService logic = new GameLogicService();
+        var board = logic.GenerateRandomBoard(boardHeight, boardLenght);
+        IDrawingService drawing = new DrawingService();
+        int numOfIterations = 0;
+        int numOfCells = 0;
 
-
-        while (true)
-        {
-            Console.WriteLine("Congratulations on starting a new game!\n\nPlease choose what you want to do next: ");
-            Console.WriteLine("1. Save game to file.");
-            Console.WriteLine("2. Quit the application.");
-            Console.WriteLine("Press any other button to proceed to the game.");
-            string? option = Console.ReadLine();
-
-            switch (option)
-            {
-                case "1":
-                    Console.WriteLine("Game saved to file");
-                    break;
-                case "2":
-                    return;
-                default:
-                    IGameLogicService logic = new GameLogicService();
-                    var board = logic.GenerateRandomBoard(boardHeight, boardLenght);
-                    IDrawingService drawing = new DrawingService();
-                    int numOfIterations = 0;
-                    int numOfCells = 0;
-                    Console.SetCursorPosition(0, boardHeight + 2);
-                    drawing.DrawBoard(board);
-                    Thread.Sleep(1000);
-                    board = logic.UpdateBoard(board);
-                    numOfIterations++;
-                    numOfCells = logic.CalculateAliveCells(board);
-                    Console.WriteLine($"Number of iterations is {numOfIterations}. \nCurrent number of alive cells is {numOfCells}.");
-                    break;
-            }
-
-
-        }
+        Console.SetCursorPosition(0, boardHeight + 2);
+        drawing.DrawBoard(board);
+        Thread.Sleep(1000);
+        board = logic.UpdateBoard(board);
+        numOfIterations++;
+        numOfCells = logic.CalculateAliveCells(board);
+        Console.WriteLine($"Number of iterations is {numOfIterations}. \nCurrent number of alive cells is {numOfCells}.");
     }
     catch (Exception ex)
     {
