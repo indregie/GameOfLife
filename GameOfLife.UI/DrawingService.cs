@@ -12,8 +12,8 @@ public class DrawingService : IDrawingService
     /// <param name="board">Board to be drawn.</param>
     public void DrawBoard(bool[,] board)
     {
-        Console.Clear();
 
+        Console.Clear();
         for (int i = 0; i < board.GetLength(0); i++)
         {
             for (int j = 0; j < board.GetLength(1); j++)

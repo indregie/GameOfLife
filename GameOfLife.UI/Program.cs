@@ -24,12 +24,16 @@ try
     IGameLogicService logic = new GameLogicService();
     var board = logic.GenerateRandomBoard(boardHeight, boardLenght);
     IDrawingService drawing = new DrawingService();
-    
+    int numOfIterations = 0;
+
     while (true)
     {
         drawing.DrawBoard(board);
         Thread.Sleep(1000);
         board = logic.UpdateBoard(board);
+        numOfIterations++;
+        Console.WriteLine($"Number of iterations is {numOfIterations}");
+
     }
 }
 catch (Exception ex) 
