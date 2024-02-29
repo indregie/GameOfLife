@@ -28,6 +28,7 @@ while (true)
 
 void NewGame()
 {
+    Console.Clear();
     Console.WriteLine("Please write down the maximum height of your game board:");
     try
     {
