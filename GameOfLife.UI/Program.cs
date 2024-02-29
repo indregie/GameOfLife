@@ -5,23 +5,23 @@ using GameOfLife.UI.Interfaces;
 
 while (true)
 {
-    Console.WriteLine("Welcome to the game of life!\nPlease choose what you want to do next by entering 1, 2 or 3.");
+    Console.WriteLine("Welcome to the game of life!\nPlease choose what you want to do next by entering 1, 2 or Q.");
     Console.WriteLine("1. Start a new game.");
     Console.WriteLine("2. Load game from file.");
-    Console.WriteLine("3. Quit the application.");
+    Console.WriteLine("Q. Quit the application.");
     string? option = Console.ReadLine();
 
-    switch (option)
+    switch (option?.ToLower())
     {
         case "1":
             NewGame();
             break;
         case "2":
             break;
-        case "3":
+        case "q":
             return;
         default:
-            Console.WriteLine("Please choose between 1, 2 or 3.");
+            Console.WriteLine("Please choose between 1, 2 or Q.");
             break;
     }
 }
@@ -53,13 +53,32 @@ void NewGame()
         int numOfIterations = 0;
         int numOfCells = 0;
 
-        Console.SetCursorPosition(0, boardHeight + 2);
-        drawing.DrawBoard(board);
-        Thread.Sleep(1000);
-        board = logic.UpdateBoard(board);
-        numOfIterations++;
-        numOfCells = logic.CalculateAliveCells(board);
-        Console.WriteLine($"Number of iterations is {numOfIterations}. \nCurrent number of alive cells is {numOfCells}.");
+        while (true)
+        {
+            Console.SetCursorPosition(0, boardHeight + 2);
+            drawing.DrawBoard(board);
+            Thread.Sleep(1000);
+            board = logic.UpdateBoard(board);
+            numOfIterations++;
+            numOfCells = logic.CalculateAliveCells(board);
+            Console.WriteLine($"Number of iterations is {numOfIterations}. \nCurrent number of alive cells is {numOfCells}.");
+            Console.WriteLine("If you want this game to be saved to file, press S.");
+            Console.WriteLine("If you want to quit this game and return back to main menu, press Q\n");
+
+            if (Console.KeyAvailable)
+            {
+                ConsoleKeyInfo key = Console.ReadKey(intercept: true);
+
+                switch (char.ToLower(key.KeyChar))
+                {
+                    case 's':
+                        break;
+                    case 'q':
+                        return;
+                }
+            }
+        }
+
     }
     catch (Exception ex)
     {
