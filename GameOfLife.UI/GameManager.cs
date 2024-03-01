@@ -58,7 +58,7 @@ public class GameManager : IGameManager
     {
         try
         {
-            Console.WriteLine("Please provide file name in this format: XXXXXXXX.txt");
+            Console.WriteLine("Please provide your file name with .txt extension:");
             string? fileName = Console.ReadLine();
 
             if (fileName is null)
