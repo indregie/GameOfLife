@@ -7,15 +7,15 @@ namespace GameOfLife.UI;
 /// </summary>
 public class GameManager : IGameManager
 {
-    private readonly IGameLogicService _logic;
-    private readonly IDrawingService _drawing;
-    private readonly IFileService _file;
+    private readonly IGameLogicService _logicService;
+    private readonly IDrawingService _drawingService;
+    private readonly IFileService _fileService;
 
-    public GameManager(IGameLogicService logic, IDrawingService drawing, IFileService file)
+    public GameManager(IGameLogicService logicService, IDrawingService drawingService, IFileService fileService)
     {
-        _logic = logic;
-        _drawing = drawing;
-        _file = file;
+        _logicService = logicService;
+        _drawingService = drawingService;
+        _fileService = fileService;
     }
 
     /// <summary>
@@ -42,7 +42,7 @@ public class GameManager : IGameManager
 
             Console.WriteLine($"Board: {boardHeight}, {boardLenght}");
 
-            bool[,] board = _logic.GenerateRandomBoard(boardHeight, boardLenght);
+            bool[,] board = _logicService.GenerateRandomBoard(boardHeight, boardLenght);
             MainLoop(board);
         }
         catch (Exception ex)
@@ -66,7 +66,7 @@ public class GameManager : IGameManager
                 throw new Exception("File name cannot be null.");
             }
 
-            bool[,]? board = _file.LoadFromFile(fileName.ToLower());
+            bool[,]? board = _fileService.LoadFromFile(fileName.ToLower());
 
             if (board is null)
             {
@@ -94,11 +94,11 @@ public class GameManager : IGameManager
 
         while (true)
         {
-            _drawing.DrawBoard(board);
+            _drawingService.DrawBoard(board);
             Thread.Sleep(1000);
-            board = _logic.UpdateBoard(board);
+            board = _logicService.UpdateBoard(board);
             numOfIterations++;
-            numOfCells = _logic.CalculateAliveCells(board);
+            numOfCells = _logicService.CalculateAliveCells(board);
 
             Console.WriteLine($"Number of iterations is {numOfIterations}. \nCurrent number of alive cells is {numOfCells}.\n");
             Console.WriteLine("If you want this game to be saved to file, press S.");
@@ -111,7 +111,7 @@ public class GameManager : IGameManager
                 switch (char.ToLower(key.KeyChar))
                 {
                     case 's':
-                        _file.SaveToFile(board);
+                        _fileService.SaveToFile(board);
                         break;
                     case 'q':
                         Console.Clear();
