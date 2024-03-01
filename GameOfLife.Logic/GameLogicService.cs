@@ -1,8 +1,10 @@
-﻿namespace GameOfLife;
+﻿using GameOfLife.Logic.Interfaces;
+
+namespace GameOfLife.Logic;
 /// <summary>
 /// Represents a service for generating, drawing and updating a Game of life board.
 /// </summary>
-public class DrawingService
+public class GameLogicService : IGameLogicService
 {
     private double _probability = 0.8;
     private Random _random = new Random();
@@ -26,24 +28,6 @@ public class DrawingService
             }
         }
         return board;
-    }
-
-    /// <summary>
-    /// Draws Game of life board on the console.
-    /// </summary>
-    /// <param name="board">Board to be drawn.</param>
-    public void DrawBoard(bool[,] board)
-    {
-        Console.Clear();
-
-        for (int i = 0; i < board.GetLength(0); i++)
-        {
-            for (int j = 0; j < board.GetLength(1); j++)
-            {
-                Console.Write(board[i, j] ? '*' : '-');
-            }
-            Console.WriteLine();
-        }
     }
 
     /// <summary>
@@ -75,7 +59,7 @@ public class DrawingService
     private bool CalculateCell(bool[,] board, int i, int j)
     {
         int numOfNeighbours = CalculateNeighbours(board, i, j);
-        
+
         if (numOfNeighbours < 2)
         {
             return false;
@@ -102,7 +86,7 @@ public class DrawingService
 
         for (int k = 0; k < offsetX.Length; k++)
         {
-            int x = i + offsetX[k]; 
+            int x = i + offsetX[k];
             int y = j + offsetY[k];
 
             if (x < 0 || y < 0)
@@ -110,13 +94,35 @@ public class DrawingService
                 continue;
             }
 
-            if ( x >= board.GetLength(0) || y >= board.GetLength(1))
+            if (x >= board.GetLength(0) || y >= board.GetLength(1))
             {
                 continue;
             }
 
             bool value = board[x, y];
-            count += value ? 1: 0;
+            count += value ? 1 : 0;
+        }
+        return count;
+    }
+
+    /// <summary>
+    /// Calculates the number of alive cells (of bool value true) on given board.
+    /// </summary>
+    /// <param name="board">Given board of the game.</param>
+    /// <returns>Number of alive cells on the current board.</returns>
+    public int CalculateAliveCells(bool[,] board)
+    {
+        int count = 0;
+
+        for (int i = 0; i < board.GetLength(0); i++)
+        {
+            for (int j = 0; j < board.GetLength(1); j++)
+            {
+                if (board[i, j])
+                {
+                    count++;
+                }
+            }
         }
         return count;
     }
