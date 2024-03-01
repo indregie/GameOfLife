@@ -90,6 +90,7 @@ public class GameManager : IGameManager
         int numOfCells = 0;
 
         Console.SetCursorPosition(0, board.GetLength(0) + 2);
+        Console.Clear();
 
         while (true)
         {
@@ -98,6 +99,7 @@ public class GameManager : IGameManager
             board = _logic.UpdateBoard(board);
             numOfIterations++;
             numOfCells = _logic.CalculateAliveCells(board);
+
             Console.WriteLine($"Number of iterations is {numOfIterations}. \nCurrent number of alive cells is {numOfCells}.\n");
             Console.WriteLine("If you want this game to be saved to file, press S.");
             Console.WriteLine("If you want to quit this game and return back to main menu, press Q.\n");
