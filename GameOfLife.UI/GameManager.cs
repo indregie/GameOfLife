@@ -60,15 +60,16 @@ public class GameManager : IGameManager
             string[] inputArray = inputGamesToDisplay.Split(' ');
 
             //butinai reikia validacijos, kad inputas ateitu is gamesNumber
-            for (int i = 0; i < inputArray.Length; i++)
+
+            foreach(string game in inputArray)
             {
-                if (int.TryParse(inputArray[i], out int gameNumber))
+                if (int.TryParse(game, out int gameNumber))
                 {
-                   _selectedGames.Add(gameNumber);
+                    _selectedGames.Add(gameNumber);
                 }
                 else
                 {
-                    Console.WriteLine($"Invalid input at the position {i + 1}.");
+                    Console.WriteLine($"Invalid input {game}.");
                     return;
                 }
             }
@@ -133,20 +134,22 @@ public class GameManager : IGameManager
         while (true)
         {
             Thread.Sleep(1000);
-            for (int i = 0; i < _boards.Count; i++)
+            foreach (var board in _boards.Values)
             {
-                int aliveCells = _boards[i].CalculateAliveCells();
+                int aliveCells = board.CalculateAliveCells();
                 numOfCells += aliveCells;
             }
+
 
             Console.Clear();
             Console.WriteLine($"Number of alive cells in all games is {numOfCells}");
             Console.WriteLine("If you want games to be saved to file, press S.");
             Console.WriteLine("If you want to quit this and return back to main menu, press Q.\n");
 
-            foreach (var item in _selectedGames)
+            foreach (var boardNumber in _selectedGames)
             {
-                _boards[item].DrawBoard();
+                Console.WriteLine($"Board number {boardNumber}.");
+                _boards[boardNumber].DrawBoard();
             }
 
 
@@ -160,6 +163,12 @@ public class GameManager : IGameManager
                         //_fileService.SaveToFile(board);
                         break;
                     case 'q':
+                        foreach (var boardNumber in _selectedGames)
+                        {
+                            _boards[boardNumber].StopBackgroundMainLoop();
+                        }
+                        _boards.Clear();
+                        _selectedGames.Clear();
                         Console.Clear();
                         return;
                 }

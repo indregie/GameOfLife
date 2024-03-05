@@ -10,13 +10,13 @@ public class BoardService : IBoardService
     private Random _random = new Random();
     private bool[,] _board;
     private int _numOfIterations = 0;
+    private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 
     /// <summary>
     /// Generates a random Game of life board with specific dimensions.
     /// </summary>
     /// <param name="boardHeight">The height of the board.</param>
     /// <param name="boardLenght">The length of the board.</param>
-    /// <returns>Randomly generated initial Game of life board.</returns>
     public void GenerateRandomBoard(int boardHeight, int boardLenght)
     {
         _board = new bool[boardHeight, boardLenght];
@@ -33,14 +33,20 @@ public class BoardService : IBoardService
 
     public void StartBackgroundMainLoop()
     {
-        Task.Run(StartMainLoop);
+        _cancellationTokenSource = new CancellationTokenSource();
+        Task.Run(() => StartMainLoop(_cancellationTokenSource.Token), _cancellationTokenSource.Token);
     }
 
-    private async Task StartMainLoop()
+    public void StopBackgroundMainLoop()
     {
-        while(true)
+        _cancellationTokenSource?.Cancel();
+    }
+
+    private async Task StartMainLoop(CancellationToken cancellationToken)
+    {
+        while(!cancellationToken.IsCancellationRequested)
         {
-            await Task.Delay(1000);
+            await Task.Delay(1000, cancellationToken);
             UpdateBoard();
         }
     }
@@ -149,7 +155,6 @@ public class BoardService : IBoardService
     /// </summary>
     public void DrawBoard()
     {
-        //Console.SetCursorPosition(_initialLeft, _initialTop);
         var board = _board;
 
         Console.WriteLine($"Number of iterations is {_numOfIterations}.");
