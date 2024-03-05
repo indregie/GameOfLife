@@ -9,6 +9,7 @@ public class BoardService : IBoardService
     private double _probability = 0.8;
     private Random _random = new Random();
     private bool[,] _board;
+    private int _numOfIterations = 0;
 
     /// <summary>
     /// Generates a random Game of life board with specific dimensions.
@@ -61,6 +62,7 @@ public class BoardService : IBoardService
             }
         }
         _board = updatedBoard;
+        _numOfIterations++;
     }
 
 
@@ -140,5 +142,24 @@ public class BoardService : IBoardService
             }
         }
         return count;
+    }
+
+    /// <summary>
+    /// Draws Game of life board on the console.
+    /// </summary>
+    public void DrawBoard()
+    {
+        //Console.SetCursorPosition(_initialLeft, _initialTop);
+        var board = _board;
+
+        Console.WriteLine($"Number of iterations is {_numOfIterations}.");
+        for (int i = 0; i < board.GetLength(0); i++)
+        {
+            for (int j = 0; j < board.GetLength(1); j++)
+            {
+                Console.Write(board[i, j] ? '*' : '-');
+            }
+            Console.WriteLine();
+        }
     }
 }

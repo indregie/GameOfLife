@@ -4,9 +4,8 @@ using GameOfLife.UI;
 using GameOfLife.UI.Interfaces;
 
 IBoardService logicService = new BoardService();
-IDrawingService drawingService = new DrawingService();
 IFileService fileService = new FileService();
-IGameManager manager = new GameManager(logicService, drawingService, fileService);
+IGameManager manager = new GameManager(logicService, fileService);
 
 while (true)
 {

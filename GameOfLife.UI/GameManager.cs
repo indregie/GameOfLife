@@ -9,15 +9,13 @@ namespace GameOfLife.UI;
 public class GameManager : IGameManager
 {
     private readonly IBoardService _logicService;
-    private readonly IDrawingService _drawingService;
     private readonly IFileService _fileService;
     private Dictionary<int, BoardService> _boards = new Dictionary<int, BoardService>();
     List<int> _selectedGames = new List<int>();
 
-    public GameManager(IBoardService logicService, IDrawingService drawingService, IFileService fileService)
+    public GameManager(IBoardService logicService, IFileService fileService)
     {
         _logicService = logicService;
-        _drawingService = drawingService;
         _fileService = fileService;
     }
 
@@ -48,16 +46,6 @@ public class GameManager : IGameManager
             int boardLenght = int.Parse(inputBoardLenght!);
             int gamesNumber = int.Parse(inputGamesNumber!);
 
-            //Generate random boards
-            for (int i = 0; i < gamesNumber; i++)
-            {
-                var board = new BoardService();
-                board.GenerateRandomBoard(boardHeight, boardLenght);
-                board.StartBackgroundMainLoop();
-                _boards.Add(i, board);
-            }
-
-      
             Console.WriteLine($"{gamesNumber} of games are now ready to start executing.");
 
             Console.WriteLine($"Please select which ones out of {gamesNumber} you want to display on screen." +
@@ -84,6 +72,15 @@ public class GameManager : IGameManager
                     return;
                 }
             }
+
+            for (int i = 0; i < gamesNumber; i++)
+            {
+                var board = new BoardService();
+                board.GenerateRandomBoard(boardHeight, boardLenght);
+                board.StartBackgroundMainLoop();
+                _boards.Add(i, board);
+            }
+
             MainLoop();
         }
         catch (Exception ex)
@@ -127,7 +124,7 @@ public class GameManager : IGameManager
     /// <param name="board">Board to be updated</param>
     private void MainLoop()
     {
-        int numOfIterations = 0;
+
         int numOfCells = 0;
 
         //Console.SetCursorPosition(0, board.GetLength(0) + 2);
@@ -135,9 +132,7 @@ public class GameManager : IGameManager
 
         while (true)
         {
-            //_drawingService.DrawBoard(board);
             Thread.Sleep(1000);
-            numOfIterations++;
             for (int i = 0; i < _boards.Count; i++)
             {
                 int aliveCells = _boards[i].CalculateAliveCells();
@@ -145,7 +140,7 @@ public class GameManager : IGameManager
             }
 
             Console.Clear();
-            Console.WriteLine($"Number of iterations is {numOfIterations}.\nNumber of alive cells is {numOfCells}");
+            Console.WriteLine($"Number of alive cells in all games is {numOfCells}");
             Console.WriteLine("If you want games to be saved to file, press S.");
             Console.WriteLine("If you want to quit this and return back to main menu, press Q.\n");
 
@@ -153,9 +148,6 @@ public class GameManager : IGameManager
             {
                 _boards[item].DrawBoard();
             }
-
-
-
 
 
             if (Console.KeyAvailable)
