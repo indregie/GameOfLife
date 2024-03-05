@@ -4,10 +4,11 @@ namespace GameOfLife.Logic;
 /// <summary>
 /// Represents a service for generating, drawing and updating a Game of life board.
 /// </summary>
-public class GameLogicService : IGameLogicService
+public class BoardService : IBoardService
 {
     private double _probability = 0.8;
     private Random _random = new Random();
+    private bool[,] _board;
 
     /// <summary>
     /// Generates a random Game of life board with specific dimensions.
@@ -15,19 +16,32 @@ public class GameLogicService : IGameLogicService
     /// <param name="boardHeight">The height of the board.</param>
     /// <param name="boardLenght">The length of the board.</param>
     /// <returns>Randomly generated initial Game of life board.</returns>
-    public bool[,] GenerateRandomBoard(int boardHeight, int boardLenght)
+    public void GenerateRandomBoard(int boardHeight, int boardLenght)
     {
-        bool[,] board = new bool[boardHeight, boardLenght];
+        _board = new bool[boardHeight, boardLenght];
 
         for (int i = 0; i < boardHeight; i++)
         {
             for (int j = 0; j < boardLenght; j++)
             {
                 double randomVal = _random.NextDouble();
-                board[i, j] = randomVal > _probability;
+                _board[i, j] = randomVal > _probability;
             }
         }
-        return board;
+    }
+
+    public void StartBackgroundMainLoop()
+    {
+        Task.Run(StartMainLoop);
+    }
+
+    private async Task StartMainLoop()
+    {
+        while(true)
+        {
+            await Task.Delay(1000);
+            UpdateBoard();
+        }
     }
 
     /// <summary>
@@ -35,19 +49,20 @@ public class GameLogicService : IGameLogicService
     /// </summary>
     /// <param name="board">Board to be updated.</param>
     /// <returns>Updated board</returns>
-    public bool[,] UpdateBoard(bool[,] board)
+    public void UpdateBoard()
     {
-        bool[,] updatedBoard = new bool[board.GetLength(0), board.GetLength(1)];
+        bool[,] updatedBoard = new bool[_board.GetLength(0), _board.GetLength(1)];
 
-        for (int i = 0; i < board.GetLength(0); i++)
+        for (int i = 0; i < _board.GetLength(0); i++)
         {
-            for (int j = 0; j < board.GetLength(1); j++)
+            for (int j = 0; j < _board.GetLength(1); j++)
             {
-                updatedBoard[i, j] = CalculateCell(board, i, j);
+                updatedBoard[i, j] = CalculateCell(_board, i, j);
             }
         }
-        return updatedBoard;
+        _board = updatedBoard;
     }
+
 
     /// <summary>
     /// Calculates the upcoming state of each cell in given Game of life board.
@@ -110,15 +125,15 @@ public class GameLogicService : IGameLogicService
     /// </summary>
     /// <param name="board">Given board of the game.</param>
     /// <returns>Number of alive cells on the current board.</returns>
-    public int CalculateAliveCells(bool[,] board)
+    public int CalculateAliveCells()
     {
         int count = 0;
 
-        for (int i = 0; i < board.GetLength(0); i++)
+        for (int i = 0; i < _board.GetLength(0); i++)
         {
-            for (int j = 0; j < board.GetLength(1); j++)
+            for (int j = 0; j < _board.GetLength(1); j++)
             {
-                if (board[i, j])
+                if (_board[i, j])
                 {
                     count++;
                 }

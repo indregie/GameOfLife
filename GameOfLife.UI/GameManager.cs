@@ -1,4 +1,5 @@
-﻿using GameOfLife.Logic.Interfaces;
+﻿using GameOfLife.Logic;
+using GameOfLife.Logic.Interfaces;
 using GameOfLife.UI.Interfaces;
 
 namespace GameOfLife.UI;
@@ -7,12 +8,13 @@ namespace GameOfLife.UI;
 /// </summary>
 public class GameManager : IGameManager
 {
-    private readonly IGameLogicService _logicService;
+    private readonly IBoardService _logicService;
     private readonly IDrawingService _drawingService;
     private readonly IFileService _fileService;
-    private Dictionary<int, bool[,]> _boards = new Dictionary<int, bool[,]>();  
+    private Dictionary<int, BoardService> _boards = new Dictionary<int, BoardService>();
+    List<int> _selectedGames = new List<int>();
 
-    public GameManager(IGameLogicService logicService, IDrawingService drawingService, IFileService fileService)
+    public GameManager(IBoardService logicService, IDrawingService drawingService, IFileService fileService)
     {
         _logicService = logicService;
         _drawingService = drawingService;
@@ -49,16 +51,40 @@ public class GameManager : IGameManager
             //Generate random boards
             for (int i = 0; i < gamesNumber; i++)
             {
-                bool[,] board = _logicService.GenerateRandomBoard(boardHeight, boardLenght);
+                var board = new BoardService();
+                board.GenerateRandomBoard(boardHeight, boardLenght);
+                board.StartBackgroundMainLoop();
                 _boards.Add(i, board);
             }
 
+      
             Console.WriteLine($"{gamesNumber} of games are now ready to start executing.");
 
             Console.WriteLine($"Please select which ones out of {gamesNumber} you want to display on screen." +
                 $"\nEnter the number of maximum 8 games in this manner <1 2 102> and press Enter.");
             string? inputGamesToDisplay = Console.ReadLine();
-            //MainLoop(board);
+
+            if ( string.IsNullOrEmpty(inputGamesToDisplay) )
+            {
+                throw new Exception("Value provided can not be empty.\n");
+            }
+          
+            string[] inputArray = inputGamesToDisplay.Split(' ');
+
+            //butinai reikia validacijos, kad inputas ateitu is gamesNumber
+            for (int i = 0; i < inputArray.Length; i++)
+            {
+                if (int.TryParse(inputArray[i], out int gameNumber))
+                {
+                   _selectedGames.Add(gameNumber);
+                }
+                else
+                {
+                    Console.WriteLine($"Invalid input at the position {i + 1}.");
+                    return;
+                }
+            }
+            MainLoop();
         }
         catch (Exception ex)
         {
@@ -69,55 +95,68 @@ public class GameManager : IGameManager
     /// <summary>
     /// Manages workflow of loading game from a file.
     /// </summary>
-    public void LoadGame()
-    {
-        try
-        {
-            Console.WriteLine("Please provide your file name with .txt extension:");
-            string? fileName = Console.ReadLine();
+    //public void LoadGame()
+    //{
+    //    try
+    //    {
+    //        Console.WriteLine("Please provide your file name with .txt extension:");
+    //        string? fileName = Console.ReadLine();
 
-            if (fileName is null)
-            {
-                throw new Exception("File name cannot be null.");
-            }
+    //        if (fileName is null)
+    //        {
+    //            throw new Exception("File name cannot be null.");
+    //        }
 
-            bool[,]? board = _fileService.LoadFromFile(fileName.ToLower());
+    //        bool[,]? board = _fileService.LoadFromFile(fileName.ToLower());
 
-            if (board is null)
-            {
-                throw new Exception(fileName);
-            }
-            MainLoop(board);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex.Message);
-        }
-    }
+    //        if (board is null)
+    //        {
+    //            throw new Exception(fileName);
+    //        }
+    //        MainLoop(board);
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        Console.WriteLine(ex.Message);
+    //    }
+    //}
 
     /// <summary>
     /// Manages main logic common to both New and Load games.
     /// </summary>
     /// <param name="board">Board to be updated</param>
-    private void MainLoop(bool[,] board)
+    private void MainLoop()
     {
         int numOfIterations = 0;
         int numOfCells = 0;
 
-        Console.SetCursorPosition(0, board.GetLength(0) + 2);
+        //Console.SetCursorPosition(0, board.GetLength(0) + 2);
         Console.Clear();
 
         while (true)
         {
-            _drawingService.DrawBoard(board);
+            //_drawingService.DrawBoard(board);
             Thread.Sleep(1000);
-            board = _logicService.UpdateBoard(board);
             numOfIterations++;
-            numOfCells = _logicService.CalculateAliveCells(board);
+            for (int i = 0; i < _boards.Count; i++)
+            {
+                int aliveCells = _boards[i].CalculateAliveCells();
+                numOfCells += aliveCells;
+            }
 
-            Console.WriteLine($"Number of iterations is {numOfIterations}. \nCurrent number of alive cells is {numOfCells}.\n");
-            Console.WriteLine("If you want this game to be saved to file, press S.");
-            Console.WriteLine("If you want to quit this game and return back to main menu, press Q.\n");
+            Console.Clear();
+            Console.WriteLine($"Number of iterations is {numOfIterations}.\nNumber of alive cells is {numOfCells}");
+            Console.WriteLine("If you want games to be saved to file, press S.");
+            Console.WriteLine("If you want to quit this and return back to main menu, press Q.\n");
+
+            foreach (var item in _selectedGames)
+            {
+                _boards[item].DrawBoard();
+            }
+
+
+
+
 
             if (Console.KeyAvailable)
             {
@@ -126,13 +165,15 @@ public class GameManager : IGameManager
                 switch (char.ToLower(key.KeyChar))
                 {
                     case 's':
-                        _fileService.SaveToFile(board);
+                        //_fileService.SaveToFile(board);
                         break;
                     case 'q':
                         Console.Clear();
                         return;
                 }
             }
+
+
         }
     }
 

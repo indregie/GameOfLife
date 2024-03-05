@@ -3,7 +3,7 @@ using GameOfLife.Logic.Interfaces;
 using GameOfLife.UI;
 using GameOfLife.UI.Interfaces;
 
-IGameLogicService logicService = new GameLogicService();
+IBoardService logicService = new BoardService();
 IDrawingService drawingService = new DrawingService();
 IFileService fileService = new FileService();
 IGameManager manager = new GameManager(logicService, drawingService, fileService);
@@ -22,7 +22,7 @@ while (true)
             manager.NewGame();
             break;
         case "2":
-            manager.LoadGame();
+            //manager.LoadGame();
             break;
         case "q":
             return;
