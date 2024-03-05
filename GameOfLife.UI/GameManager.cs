@@ -10,6 +10,7 @@ public class GameManager : IGameManager
     private readonly IGameLogicService _logicService;
     private readonly IDrawingService _drawingService;
     private readonly IFileService _fileService;
+    private Dictionary<int, bool[,]> _boards = new Dictionary<int, bool[,]>();  
 
     public GameManager(IGameLogicService logicService, IDrawingService drawingService, IFileService fileService)
     {
@@ -32,18 +33,32 @@ public class GameManager : IGameManager
             Console.WriteLine("Please write down the maximum lenght of your game board:");
             string? inputBoardLenght = Console.ReadLine();
 
-            if (string.IsNullOrEmpty(inputBoardHeight) || string.IsNullOrEmpty(inputBoardLenght))
+            Console.WriteLine("Please write down how many games do you want to run (up to 1000):");
+            string? inputGamesNumber = Console.ReadLine();
+
+            if (string.IsNullOrEmpty(inputBoardHeight) || string.IsNullOrEmpty(inputBoardLenght) 
+                || string.IsNullOrEmpty(inputGamesNumber))
             {
-                throw new Exception("Value provided can not be empty.");
+                throw new Exception("Value provided can not be empty.\n");
             }
 
             int boardHeight = int.Parse(inputBoardHeight!);
             int boardLenght = int.Parse(inputBoardLenght!);
+            int gamesNumber = int.Parse(inputGamesNumber!);
 
-            Console.WriteLine($"Board: {boardHeight}, {boardLenght}");
+            //Generate random boards
+            for (int i = 0; i < gamesNumber; i++)
+            {
+                bool[,] board = _logicService.GenerateRandomBoard(boardHeight, boardLenght);
+                _boards.Add(i, board);
+            }
 
-            bool[,] board = _logicService.GenerateRandomBoard(boardHeight, boardLenght);
-            MainLoop(board);
+            Console.WriteLine($"{gamesNumber} of games are now ready to start executing.");
+
+            Console.WriteLine($"Please select which ones out of {gamesNumber} you want to display on screen." +
+                $"\nEnter the number of maximum 8 games in this manner <1 2 102> and press Enter.");
+            string? inputGamesToDisplay = Console.ReadLine();
+            //MainLoop(board);
         }
         catch (Exception ex)
         {
