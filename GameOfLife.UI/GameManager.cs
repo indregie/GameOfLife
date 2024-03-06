@@ -44,11 +44,16 @@ public class GameManager : IGameManager
 
             int boardHeight = int.Parse(inputBoardHeight!);
             int boardLenght = int.Parse(inputBoardLenght!);
-            int gamesNumber = int.Parse(inputGamesNumber!);
+            int numberOfGames = int.Parse(inputGamesNumber!);
 
-            Console.WriteLine($"{gamesNumber} of games are now ready to start executing.");
+            if (numberOfGames > 1000)
+            {
+                throw new Exception("You can only run up to 1000 games.\n");
+            }
 
-            Console.WriteLine($"Please select which ones out of {gamesNumber} you want to display on screen." +
+            Console.WriteLine($"\n{numberOfGames} of games are now ready to start executing.");
+
+            Console.WriteLine($"Please select which ones out of {numberOfGames} you want to display on screen." +
                 $"\nEnter the number of maximum 8 games in this manner <1 2 102> and press Enter.");
             string? inputGamesToDisplay = Console.ReadLine();
 
@@ -59,17 +64,20 @@ public class GameManager : IGameManager
           
             string[] inputArray = inputGamesToDisplay.Split(' ');
 
-            //butinai reikia validacijos, kad inputas ateitu is gamesNumber
+            if (inputArray.Length > 8)
+            {
+                throw new Exception("You can only select up to 8 games to display.\n");
+            }
 
             foreach(string game in inputArray)
             {
                 if (int.TryParse(game, out int gameNumber))
                 {
-                    _selectedGames.Add(gameNumber);
-                }
-                if (game is not in gamesNumber)
+                    if (!Enumerable.Range(1, numberOfGames).Contains(gameNumber))
                 {
-                    throw new Exception("Game {game} does not exist. You are running {gamesNumber} of games.");
+                        throw new Exception($"Game {game} does not exist. You are running {numberOfGames} of games.");
+                    }
+                    _selectedGames.Add(gameNumber);
                 }
                 else
                 {
@@ -78,7 +86,7 @@ public class GameManager : IGameManager
                 }
             }
 
-            for (int i = 0; i < gamesNumber; i++)
+            for (int i = 0; i < numberOfGames; i++)
             {
                 var board = new BoardService();
                 board.GenerateRandomBoard(boardHeight, boardLenght);
