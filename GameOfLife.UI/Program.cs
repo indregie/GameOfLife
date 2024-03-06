@@ -3,9 +3,8 @@ using GameOfLife.Logic.Interfaces;
 using GameOfLife.UI;
 using GameOfLife.UI.Interfaces;
 
-IBoardService logicService = new BoardService();
 IFileService fileService = new FileService();
-IGameManager manager = new GameManager(logicService, fileService);
+IGameManager manager = new GameManager(fileService);
 
 while (true)
 {

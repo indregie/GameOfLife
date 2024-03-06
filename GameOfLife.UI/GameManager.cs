@@ -8,14 +8,14 @@ namespace GameOfLife.UI;
 /// </summary>
 public class GameManager : IGameManager
 {
-    private readonly IBoardService _logicService;
     private readonly IFileService _fileService;
-    private Dictionary<int, BoardService> _boards = new Dictionary<int, BoardService>();
+    private Dictionary<int, IBoardService> _boards = new Dictionary<int, IBoardService>();
     List<int> _selectedGames = new List<int>();
+    private int _numOfCells = 0;
+    private int _numberOfGames = 0;
 
-    public GameManager(IBoardService logicService, IFileService fileService)
+    public GameManager(IFileService fileService)
     {
-        _logicService = logicService;
         _fileService = fileService;
     }
 
@@ -50,41 +50,10 @@ public class GameManager : IGameManager
             {
                 throw new Exception("You can only run up to 1000 games.\n");
             }
-
+            _numberOfGames = numberOfGames;
             Console.WriteLine($"\n{numberOfGames} of games are now ready to start executing.");
 
-            Console.WriteLine($"Please select which ones out of {numberOfGames} you want to display on screen." +
-                $"\nEnter the number of maximum 8 games in this manner <1 2 102> and press Enter.");
-            string? inputGamesToDisplay = Console.ReadLine();
-
-            if ( string.IsNullOrEmpty(inputGamesToDisplay) )
-            {
-                throw new Exception("Value provided can not be empty.\n");
-            }
-          
-            string[] inputArray = inputGamesToDisplay.Split(' ');
-
-            if (inputArray.Length > 8)
-            {
-                throw new Exception("You can only select up to 8 games to display.\n");
-            }
-
-            foreach(string game in inputArray)
-            {
-                if (int.TryParse(game, out int gameNumber))
-                {
-                    if (!Enumerable.Range(1, numberOfGames).Contains(gameNumber))
-                {
-                        throw new Exception($"Game {game} does not exist. You are running {numberOfGames} of games.");
-                    }
-                    _selectedGames.Add(gameNumber);
-                }
-                else
-                {
-                    Console.WriteLine($"Invalid input {game}.");
-                    return;
-                }
-            }
+            SelectGames(numberOfGames);
 
             for (int i = 0; i < numberOfGames; i++)
             {
@@ -100,6 +69,44 @@ public class GameManager : IGameManager
         {
             Console.WriteLine(ex.Message);
         }
+    }
+
+    private void SelectGames(int numberOfGames)
+    {
+        Console.WriteLine($"Please select which ones out of {numberOfGames} you want to display on screen." +
+            $"\nEnter the number of maximum 8 games in this manner <1 2 102> and press Enter.");
+        string? inputGamesToDisplay = Console.ReadLine();
+
+        if (string.IsNullOrEmpty(inputGamesToDisplay))
+        {
+            throw new Exception("Value provided can not be empty.\n");
+        }
+
+        string[] inputArray = inputGamesToDisplay.Split(' ');
+
+        if (inputArray.Length > 8)
+        {
+            throw new Exception("You can only select up to 8 games to display.\n");
+        }
+
+        foreach (string game in inputArray)
+        {
+            if (int.TryParse(game, out int gameNumber))
+            {
+                if (!Enumerable.Range(1, numberOfGames).Contains(gameNumber))
+                {
+                    throw new Exception($"Game {game} does not exist. You are running {numberOfGames} of games.");
+                }
+                _selectedGames.Add(gameNumber);
+            }
+            else
+            {
+                Console.WriteLine($"Invalid input {game}.");
+                return;
+            }
+        }
+
+        MainLoop();
     }
 
     /// <summary>
@@ -137,21 +144,19 @@ public class GameManager : IGameManager
     /// <param name="board">Board to be updated</param>
     private void MainLoop()
     {
-        int numOfCells = 0;
-
         Console.Clear();
 
         while (true)
         {
-            Task.Delay(1000);
+            Thread.Sleep(1000);
             foreach (var board in _boards.Values)
             {
                 int aliveCells = board.CalculateAliveCells();
-                numOfCells += aliveCells;
+                _numOfCells += aliveCells;
             }
 
             Console.Clear();
-            Console.WriteLine($"Number of alive cells in all games is {numOfCells}");
+            Console.WriteLine($"Number of alive cells in all games is {_numOfCells}");
             Console.WriteLine("If you want games to be saved to file, press S.");
             Console.WriteLine("If you want to change games iterating on screen, press C.");
             Console.WriteLine("If you want to quit this and return back to main menu, press Q.\n");
@@ -172,7 +177,7 @@ public class GameManager : IGameManager
                         //_fileService.SaveToFile(board);
                         break;
                     case 'c':
-                        //_fileService.SaveToFile(board);
+                        SelectGames(_numberOfGames);
                         break;
                     case 'q':
                         foreach (var boardNumber in _selectedGames)
@@ -187,5 +192,4 @@ public class GameManager : IGameManager
             }
         }
     }
-
 }
