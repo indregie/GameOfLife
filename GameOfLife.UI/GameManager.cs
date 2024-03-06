@@ -143,7 +143,7 @@ public class GameManager : IGameManager
 
         while (true)
         {
-            Thread.Sleep(1000);
+            Task.Delay(1000);
             foreach (var board in _boards.Values)
             {
                 int aliveCells = board.CalculateAliveCells();
@@ -153,6 +153,7 @@ public class GameManager : IGameManager
             Console.Clear();
             Console.WriteLine($"Number of alive cells in all games is {numOfCells}");
             Console.WriteLine("If you want games to be saved to file, press S.");
+            Console.WriteLine("If you want to change games iterating on screen, press C.");
             Console.WriteLine("If you want to quit this and return back to main menu, press Q.\n");
 
             foreach (var boardNumber in _selectedGames)
@@ -168,6 +169,9 @@ public class GameManager : IGameManager
                 switch (char.ToLower(key.KeyChar))
                 {
                     case 's':
+                        //_fileService.SaveToFile(board);
+                        break;
+                    case 'c':
                         //_fileService.SaveToFile(board);
                         break;
                     case 'q':
