@@ -51,9 +51,7 @@ public class GameManager : IGameManager
                 throw new Exception("You can only run up to 1000 games.\n");
             }
             _numberOfGames = numberOfGames;
-            Console.WriteLine($"\n{numberOfGames} of games are now ready to start executing.");
-
-            SelectGames(numberOfGames);
+            Console.WriteLine($"\n{numberOfGames} of games are now ready to start executing.");           
 
             for (int i = 0; i < numberOfGames; i++)
             {
@@ -63,6 +61,8 @@ public class GameManager : IGameManager
                 _boards.Add(i, board);
             }
 
+            SelectGames();
+
             MainLoop();
         }
         catch (Exception ex)
@@ -71,9 +71,9 @@ public class GameManager : IGameManager
         }
     }
 
-    private void SelectGames(int numberOfGames)
+    private void SelectGames()
     {
-        Console.WriteLine($"Please select which ones out of {numberOfGames} you want to display on screen." +
+        Console.WriteLine($"Please select which ones out of {_numberOfGames} you want to display on screen." +
             $"\nEnter the number of maximum 8 games in this manner <1 2 102> and press Enter.");
         string? inputGamesToDisplay = Console.ReadLine();
 
@@ -93,9 +93,9 @@ public class GameManager : IGameManager
         {
             if (int.TryParse(game, out int gameNumber))
             {
-                if (!Enumerable.Range(1, numberOfGames).Contains(gameNumber))
+                if (!Enumerable.Range(1, _numberOfGames).Contains(gameNumber))
                 {
-                    throw new Exception($"Game {game} does not exist. You are running {numberOfGames} of games.");
+                    throw new Exception($"Game {game} does not exist. You are running {_numberOfGames} of games.");
                 }
                 _selectedGames.Add(gameNumber);
             }
@@ -141,7 +141,6 @@ public class GameManager : IGameManager
     /// <summary>
     /// Manages main logic common to both New and Load games.
     /// </summary>
-    /// <param name="board">Board to be updated</param>
     private void MainLoop()
     {
         Console.Clear();
@@ -177,7 +176,9 @@ public class GameManager : IGameManager
                         //_fileService.SaveToFile(board);
                         break;
                     case 'c':
-                        SelectGames(_numberOfGames);
+                        Console.Clear();
+                        _selectedGames.Clear();
+                        SelectGames();
                         break;
                     case 'q':
                         foreach (var boardNumber in _selectedGames)

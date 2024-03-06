@@ -54,8 +54,6 @@ public class BoardService : IBoardService
     /// <summary>
     /// Updates board following the rules of Game of life.
     /// </summary>
-    /// <param name="board">Board to be updated.</param>
-    /// <returns>Updated board</returns>
     public void UpdateBoard()
     {
         bool[,] updatedBoard = new bool[_board.GetLength(0), _board.GetLength(1)];
@@ -131,7 +129,6 @@ public class BoardService : IBoardService
     /// <summary>
     /// Calculates the number of alive cells (of bool value true) on given board.
     /// </summary>
-    /// <param name="board">Given board of the game.</param>
     /// <returns>Number of alive cells on the current board.</returns>
     public int CalculateAliveCells()
     {
