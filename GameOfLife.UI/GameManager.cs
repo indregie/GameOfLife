@@ -24,6 +24,7 @@ public class GameManager : IGameManager
     /// </summary>
     public void NewGame()
     {
+        _numOfCells = 0; 
         Console.Clear();
         Console.WriteLine("Please write down the maximum height of your game board:");
         try
