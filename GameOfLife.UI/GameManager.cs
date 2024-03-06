@@ -67,6 +67,10 @@ public class GameManager : IGameManager
                 {
                     _selectedGames.Add(gameNumber);
                 }
+                if (game is not in gamesNumber)
+                {
+                    throw new Exception("Game {game} does not exist. You are running {gamesNumber} of games.");
+                }
                 else
                 {
                     Console.WriteLine($"Invalid input {game}.");
@@ -125,10 +129,8 @@ public class GameManager : IGameManager
     /// <param name="board">Board to be updated</param>
     private void MainLoop()
     {
-
         int numOfCells = 0;
 
-        //Console.SetCursorPosition(0, board.GetLength(0) + 2);
         Console.Clear();
 
         while (true)
@@ -140,7 +142,6 @@ public class GameManager : IGameManager
                 numOfCells += aliveCells;
             }
 
-
             Console.Clear();
             Console.WriteLine($"Number of alive cells in all games is {numOfCells}");
             Console.WriteLine("If you want games to be saved to file, press S.");
@@ -151,7 +152,6 @@ public class GameManager : IGameManager
                 Console.WriteLine($"Board number {boardNumber}.");
                 _boards[boardNumber].DrawBoard();
             }
-
 
             if (Console.KeyAvailable)
             {
@@ -173,8 +173,6 @@ public class GameManager : IGameManager
                         return;
                 }
             }
-
-
         }
     }
 

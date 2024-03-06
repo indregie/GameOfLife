@@ -1,8 +1,7 @@
-﻿namespace GameOfLife.Logic.Interfaces
+﻿namespace GameOfLife.Logic.Interfaces;
+
+public interface IFileService
 {
-    public interface IFileService
-    {
-        bool[,]? LoadFromFile(string fileName);
-        void SaveToFile(bool[,] board);
-    }
+    bool[,]? LoadFromFile(string fileName);
+    void SaveToFile(bool[,] board);
 }
