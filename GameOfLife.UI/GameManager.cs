@@ -106,8 +106,6 @@ public class GameManager : IGameManager
                 return;
             }
         }
-
-        MainLoop();
     }
 
     /// <summary>
