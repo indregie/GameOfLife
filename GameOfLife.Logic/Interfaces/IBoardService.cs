@@ -9,5 +9,5 @@ public interface IBoardService
     int CalculateAliveCells();
     void DrawBoard();
     void SaveToFile();
-    bool[,]? LoadFromFile(string fileName);
+    void LoadFromFile(string fileName);
 }

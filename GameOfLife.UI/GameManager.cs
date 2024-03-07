@@ -119,21 +119,21 @@ public class GameManager : IGameManager
             }
 
             Console.WriteLine("Please provide your file name: ");
-            string? fileNameWithExtension = Console.ReadLine();
+            string? fileName = Console.ReadLine();
 
-            if (fileNameWithExtension is null)
+            if (fileName is null)
             {
                 throw new Exception("File name cannot be null.");
             }
             
-            string fileName = Path.GetFileNameWithoutExtension(fileNameWithExtension);
-            string filePath = Path.Combine(folderName, fileName.ToLower());
+            string filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), folderName, $"{fileName.ToLower()}.txt");
             int boardNumber = int.Parse(fileName!);
 
             var board = new BoardService(boardNumber);
-            board.LoadFromFile(filePath + ".txt");
+            board.LoadFromFile(filePath);
             board.StartBackgroundMainLoop();
             _boards.Add(boardNumber, board);
+            _selectedGames.Add(boardNumber);
 
             MainLoop();
         }
@@ -184,7 +184,7 @@ public class GameManager : IGameManager
                             {
                                 board.SaveToFile();
                             }
-                            Console.WriteLine($"Files saved to folder {DateTime.Now.Date} on your desktop.");
+                            Console.WriteLine($"Files saved to folder {DateTime.Now} on your desktop.");
                             break;
                         case 'c':
                             Console.Clear();

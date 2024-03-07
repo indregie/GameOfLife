@@ -206,7 +206,7 @@ public class BoardService : IBoardService
     /// <param name="fileName">File from which data is loaded.</param>
     /// <returns>Board constructed from what was in the file.</returns>
     /// <exception cref="FileNotFoundException">Is thrown if no file with provided name was found in directory.</exception>
-    public bool[,]? LoadFromFile(string fileName)
+    public void LoadFromFile(string fileName)
     {
         if (!File.Exists(fileName))
         {
@@ -227,6 +227,7 @@ public class BoardService : IBoardService
                 board[i, j] = cell == '*';
             }
         }
-        return board;
+
+        _board = board;
     }
 }
