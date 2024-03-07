@@ -125,15 +125,14 @@ public class GameManager : IGameManager
             {
                 throw new Exception("File name cannot be null.");
             }
-
+            
+            string filePath = Path.Combine(folderName, fileName.ToLower());
             int boardNumber = int.Parse(fileName!);
 
-            bool[,]? board = _boards[boardNumber].LoadFromFile(fileName!.ToLower());
-
-            if (board is null)
-            {
-                throw new Exception(fileName);
-            }
+            var board = new BoardService(boardNumber);
+            board.LoadFromFile(filePath);
+            board.StartBackgroundMainLoop();
+            _boards.Add(boardNumber, board);
 
             MainLoop();
         }
