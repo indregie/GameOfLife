@@ -78,7 +78,6 @@ public class BoardService : IBoardService
         _numOfIterations++;
     }
 
-
     /// <summary>
     /// Calculates the upcoming state of each cell in given Game of life board.
     /// </summary>

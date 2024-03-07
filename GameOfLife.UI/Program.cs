@@ -19,7 +19,7 @@ while (true)
             manager.NewGame();
             break;
         case "2":
-            //manager.LoadGame();
+            manager.LoadGame();
             break;
         case "q":
             return;

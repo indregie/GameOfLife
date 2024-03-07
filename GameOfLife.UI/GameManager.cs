@@ -106,31 +106,42 @@ public class GameManager : IGameManager
     /// <summary>
     /// Manages workflow of loading game from a file.
     /// </summary>
-    //public void LoadGame()
-    //{
-    //    try
-    //    {
-    //        Console.WriteLine("Please provide your file name with .txt extension:");
-    //        string? fileName = Console.ReadLine();
+    public void LoadGame()
+    {
+        try
+        {
+            Console.WriteLine("Please provide your folder name: ");
+            string? folderName = Console.ReadLine();
 
-    //        if (fileName is null)
-    //        {
-    //            throw new Exception("File name cannot be null.");
-    //        }
+            if (folderName is null)
+            {
+                throw new Exception("Folder name cannot be null.");
+            }
 
-    //        bool[,]? board = _fileService.LoadFromFile(fileName.ToLower());
+            Console.WriteLine("Please provide your file name: ");
+            string? fileName = Console.ReadLine();
 
-    //        if (board is null)
-    //        {
-    //            throw new Exception(fileName);
-    //        }
-    //        MainLoop(board);
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        Console.WriteLine(ex.Message);
-    //    }
-    //}
+            if (fileName is null)
+            {
+                throw new Exception("File name cannot be null.");
+            }
+
+            int boardNumber = int.Parse(fileName!);
+
+            bool[,]? board = _boards[boardNumber].LoadFromFile(fileName!.ToLower());
+
+            if (board is null)
+            {
+                throw new Exception(fileName);
+            }
+
+            MainLoop();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+    }
 
     /// <summary>
     /// Manages main logic common to both New and Load games.

@@ -2,6 +2,6 @@
 
 public interface IGameManager
 {
-    //void LoadGame();
+    void LoadGame();
     void NewGame();
 }
