@@ -12,12 +12,11 @@ public class BoardService : IBoardService
     private int _id;
     private int _numOfIterations = 0;
     private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
-    private bool _isAlive = true;
-    public bool IsAlive {  get { return _isAlive; } }
 
     public BoardService(int id)
     {
         _id = id;
+        _board = new bool[0,0];
     }
 
     /// <summary>
@@ -40,7 +39,7 @@ public class BoardService : IBoardService
     }
 
     /// <summary>
-    /// Starts main loop to run parallel.
+    /// Starts the main loop in the background, running game logic in parallel.
     /// </summary>
     public void StartBackgroundMainLoop()
     {
@@ -48,11 +47,17 @@ public class BoardService : IBoardService
         Task.Run(() => StartMainLoop(_cancellationTokenSource.Token), _cancellationTokenSource.Token);
     }
 
+    /// <summary>
+    /// Stops the background main loop.
+    /// </summary>
     public void StopBackgroundMainLoop()
     {
         _cancellationTokenSource?.Cancel();
     }
 
+    /// <summary>
+    /// Runs the main loop that updates boards at regular intervals.
+    /// </summary>
     private async Task StartMainLoop(CancellationToken cancellationToken)
     {
         while(!cancellationToken.IsCancellationRequested)
@@ -67,11 +72,6 @@ public class BoardService : IBoardService
     /// </summary>
     public void UpdateBoard()
     {
-        if (!_isAlive)
-        {
-            return;
-        }
-
         bool[,] updatedBoard = new bool[_board.GetLength(0), _board.GetLength(1)];
 
         for (int i = 0; i < _board.GetLength(0); i++)
@@ -83,8 +83,6 @@ public class BoardService : IBoardService
         }
         _board = updatedBoard;
         _numOfIterations++;
-
-        _isAlive = CalculateAliveCells() > 0;
     }
 
     /// <summary>
@@ -185,6 +183,7 @@ public class BoardService : IBoardService
     /// <summary>
     /// Saves given boards to a file, overriding the existing folder if it has the same name.
     /// </summary>
+    /// <param name="savePath">Path where the file will be saved.</param>
     public void SaveToFile(string savePath)
     { 
         string fileName = Path.Combine(savePath, $"{_id}.txt");
@@ -205,7 +204,6 @@ public class BoardService : IBoardService
     /// Loads data from the file and displays on console.
     /// </summary>
     /// <param name="fileName">File from which data is loaded.</param>
-    /// <returns>Board constructed from what was in the file.</returns>
     /// <exception cref="FileNotFoundException">Is thrown if no file with provided name was found in directory.</exception>
     public void LoadFromFile(string fileName)
     {
