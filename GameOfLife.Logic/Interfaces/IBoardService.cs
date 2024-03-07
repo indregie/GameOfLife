@@ -8,4 +8,6 @@ public interface IBoardService
     void UpdateBoard();
     int CalculateAliveCells();
     void DrawBoard();
+    void SaveToFile();
+    bool[,]? LoadFromFile(string fileName);
 }

@@ -172,7 +172,10 @@ public class GameManager : IGameManager
                 switch (char.ToLower(key.KeyChar))
                 {
                     case 's':
-                        //_fileService.SaveToFile(board);
+                        foreach (var board in _boards.Values)
+                        {
+                            board.SaveToFile();
+                        }
                         break;
                     case 'c':
                         Console.Clear();
