@@ -1,6 +1,7 @@
 ﻿using GameOfLife.Logic;
 using GameOfLife.Logic.Interfaces;
 using GameOfLife.UI.Interfaces;
+using System.IO;
 
 namespace GameOfLife.UI;
 /// <summary>
@@ -8,16 +9,10 @@ namespace GameOfLife.UI;
 /// </summary>
 public class GameManager : IGameManager
 {
-    private readonly IFileService _fileService;
     private Dictionary<int, IBoardService> _boards = new Dictionary<int, IBoardService>();
     List<int> _selectedGames = new List<int>();
     private int _numOfCells = 0;
     private int _numberOfGames = 0;
-
-    public GameManager(IFileService fileService)
-    {
-        _fileService = fileService;
-    }
 
     /// <summary>
     /// Manages workflow when initiating new game is chosen.
@@ -54,9 +49,9 @@ public class GameManager : IGameManager
             _numberOfGames = numberOfGames;
             Console.WriteLine($"\n{numberOfGames} of games are now ready to start executing.");           
 
-            for (int i = 0; i < numberOfGames; i++)
+            for (int i = 1; i <= numberOfGames; i++)
             {
-                var board = new BoardService();
+                var board = new BoardService(i);
                 board.GenerateRandomBoard(boardHeight, boardLenght);
                 board.StartBackgroundMainLoop();
                 _boards.Add(i, board);
@@ -146,53 +141,62 @@ public class GameManager : IGameManager
 
         while (true)
         {
-            Thread.Sleep(1000);
-            foreach (var board in _boards.Values)
+            try
             {
-                int aliveCells = board.CalculateAliveCells();
-                _numOfCells += aliveCells;
-            }
-
-            Console.Clear();
-            Console.WriteLine($"Number of alive cells in all games is {_numOfCells}");
-            Console.WriteLine("If you want games to be saved to file, press S.");
-            Console.WriteLine("If you want to change games iterating on screen, press C.");
-            Console.WriteLine("If you want to quit this and return back to main menu, press Q.\n");
-
-            foreach (var boardNumber in _selectedGames)
-            {
-                Console.WriteLine($"Board number {boardNumber}.");
-                _boards[boardNumber].DrawBoard();
-            }
-
-            if (Console.KeyAvailable)
-            {
-                ConsoleKeyInfo key = Console.ReadKey(intercept: true);
-
-                switch (char.ToLower(key.KeyChar))
+                Thread.Sleep(1000);
+                foreach (var board in _boards.Values)
                 {
-                    case 's':
-                        foreach (var board in _boards.Values)
-                        {
-                            board.SaveToFile();
-                        }
-                        break;
-                    case 'c':
-                        Console.Clear();
-                        _selectedGames.Clear();
-                        SelectGames();
-                        break;
-                    case 'q':
-                        foreach (var boardNumber in _selectedGames)
-                        {
-                            _boards[boardNumber].StopBackgroundMainLoop();
-                        }
-                        _boards.Clear();
-                        _selectedGames.Clear();
-                        Console.Clear();
-                        return;
+                    int aliveCells = board.CalculateAliveCells();
+                    _numOfCells += aliveCells;
+                }
+
+                Console.Clear();
+                Console.WriteLine($"Number of alive cells in all games is {_numOfCells}");
+                Console.WriteLine("If you want games to be saved to file, press S.");
+                Console.WriteLine("If you want to change games iterating on screen, press C.");
+                Console.WriteLine("If you want to quit this and return back to main menu, press Q.\n");
+
+                foreach (var boardNumber in _selectedGames)
+                {
+                    Console.WriteLine($"Board number {boardNumber}.");
+                    _boards[boardNumber].DrawBoard();
+                }
+
+                if (Console.KeyAvailable)
+                {
+                    ConsoleKeyInfo key = Console.ReadKey(intercept: true);
+
+                    switch (char.ToLower(key.KeyChar))
+                    {
+                        case 's':
+                            foreach (var board in _boards.Values)
+                            {
+                                board.SaveToFile();
+                            }
+                            Console.WriteLine($"Files saved to folder {DateTime.Now.Date} on your desktop.");
+                            break;
+                        case 'c':
+                            Console.Clear();
+                            _selectedGames.Clear();
+                            SelectGames();
+                            break;
+                        case 'q':
+                            foreach (var boardNumber in _selectedGames)
+                            {
+                                _boards[boardNumber].StopBackgroundMainLoop();
+                            }
+                            _boards.Clear();
+                            _selectedGames.Clear();
+                            Console.Clear();
+                            return;
+                    }
                 }
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+           
         }
     }
 }

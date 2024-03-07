@@ -9,8 +9,14 @@ public class BoardService : IBoardService
     private double _probability = 0.8;
     private Random _random = new Random();
     private bool[,] _board;
+    private int _id;
     private int _numOfIterations = 0;
     private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+
+    public BoardService(int id)
+    {
+        _id = id;
+    }
 
     /// <summary>
     /// Generates a random Game of life board with specific dimensions.
@@ -31,6 +37,9 @@ public class BoardService : IBoardService
         }
     }
 
+    /// <summary>
+    /// Starts main loop to run parallel.
+    /// </summary>
     public void StartBackgroundMainLoop()
     {
         _cancellationTokenSource = new CancellationTokenSource();
@@ -168,10 +177,17 @@ public class BoardService : IBoardService
     /// <summary>
     /// Saves given board to a file.
     /// </summary>
-    /// <param name="board">Board to be saved.</param>
     public void SaveToFile()
     {
-        string fileName = string.Format($"{DateTime.Now:yyyyMMdd}.txt");
+        string currentDate = DateTime.Now.ToString("yyyyMMdd");
+        string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), currentDate);
+
+        if (!Directory.Exists(path))
+        {
+            Directory.CreateDirectory(path);
+        }
+
+        string fileName = Path.Combine(path, $"{_id}.txt");
         using (StreamWriter writer = new StreamWriter(fileName, false))
         {
             for (int i = 0; i < _board.GetLength(0); i++)
@@ -183,7 +199,6 @@ public class BoardService : IBoardService
                 writer.WriteLine();
             }
         }
-        Console.WriteLine($"Board view saved to: {fileName} at {DateTime.Now}.");
     }
 
     /// <summary>
