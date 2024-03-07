@@ -144,6 +144,23 @@ public class GameManager : IGameManager
     }
 
     /// <summary>
+    /// Ensures that the save directory exists, creates a new one if it does not.
+    /// </summary>
+    private string SetSaveDirectory()
+    {
+        string currentDate = DateTime.Now.ToString("yyyyMMdd");
+        string savePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), currentDate);
+
+        if (Directory.Exists(savePath))
+        {
+            Directory.Delete(savePath, true);
+        }
+
+        Directory.CreateDirectory(savePath);
+        return savePath;
+    }
+
+    /// <summary>
     /// Manages main logic common to both New and Load games.
     /// </summary>
     private void MainLoop()
@@ -173,16 +190,17 @@ public class GameManager : IGameManager
                     _boards[boardNumber].DrawBoard();
                 }
 
-                if (Console.KeyAvailable)
+                if (!Console.KeyAvailable)
                 {
                     ConsoleKeyInfo key = Console.ReadKey(intercept: true);
 
                     switch (char.ToLower(key.KeyChar))
                     {
                         case 's':
+                            string savePath = SetSaveDirectory();
                             foreach (var board in _boards.Values)
                             {
-                                board.SaveToFile();
+                                board.SaveToFile(savePath);
                             }
                             Console.WriteLine($"Files saved to folder {DateTime.Now} on your desktop.");
                             break;
@@ -206,8 +224,7 @@ public class GameManager : IGameManager
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
-            }
-           
+            }        
         }
     }
 }

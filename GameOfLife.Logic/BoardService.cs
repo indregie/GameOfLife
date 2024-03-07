@@ -174,19 +174,11 @@ public class BoardService : IBoardService
     }
 
     /// <summary>
-    /// Saves given board to a file.
+    /// Saves given boards to a file, overriding the existing folder if it has the same name.
     /// </summary>
-    public void SaveToFile()
-    {
-        string currentDate = DateTime.Now.ToString("yyyyMMdd");
-        string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), currentDate);
-
-        if (!Directory.Exists(path))
-        {
-            Directory.CreateDirectory(path);
-        }
-
-        string fileName = Path.Combine(path, $"{_id}.txt");
+    public void SaveToFile(string savePath)
+    { 
+        string fileName = Path.Combine(savePath, $"{_id}.txt");
         using (StreamWriter writer = new StreamWriter(fileName, false))
         {
             for (int i = 0; i < _board.GetLength(0); i++)
@@ -199,6 +191,8 @@ public class BoardService : IBoardService
             }
         }
     }
+
+
 
     /// <summary>
     /// Loads data from the file and displays on console.
