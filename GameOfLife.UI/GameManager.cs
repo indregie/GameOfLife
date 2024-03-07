@@ -119,18 +119,19 @@ public class GameManager : IGameManager
             }
 
             Console.WriteLine("Please provide your file name: ");
-            string? fileName = Console.ReadLine();
+            string? fileNameWithExtension = Console.ReadLine();
 
-            if (fileName is null)
+            if (fileNameWithExtension is null)
             {
                 throw new Exception("File name cannot be null.");
             }
             
+            string fileName = Path.GetFileNameWithoutExtension(fileNameWithExtension);
             string filePath = Path.Combine(folderName, fileName.ToLower());
             int boardNumber = int.Parse(fileName!);
 
             var board = new BoardService(boardNumber);
-            board.LoadFromFile(filePath);
+            board.LoadFromFile(filePath + ".txt");
             board.StartBackgroundMainLoop();
             _boards.Add(boardNumber, board);
 
