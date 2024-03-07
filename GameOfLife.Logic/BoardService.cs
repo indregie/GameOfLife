@@ -12,6 +12,8 @@ public class BoardService : IBoardService
     private int _id;
     private int _numOfIterations = 0;
     private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+    private bool _isAlive = true;
+    public bool IsAlive {  get { return _isAlive; } }
 
     public BoardService(int id)
     {
@@ -65,6 +67,11 @@ public class BoardService : IBoardService
     /// </summary>
     public void UpdateBoard()
     {
+        if (!_isAlive)
+        {
+            return;
+        }
+
         bool[,] updatedBoard = new bool[_board.GetLength(0), _board.GetLength(1)];
 
         for (int i = 0; i < _board.GetLength(0); i++)
@@ -76,6 +83,8 @@ public class BoardService : IBoardService
         }
         _board = updatedBoard;
         _numOfIterations++;
+
+        _isAlive = CalculateAliveCells() > 0;
     }
 
     /// <summary>
@@ -192,8 +201,6 @@ public class BoardService : IBoardService
         }
     }
 
-
-
     /// <summary>
     /// Loads data from the file and displays on console.
     /// </summary>
@@ -221,7 +228,6 @@ public class BoardService : IBoardService
                 board[i, j] = cell == '*';
             }
         }
-
         _board = board;
     }
 }

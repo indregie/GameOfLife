@@ -11,7 +11,6 @@ public class GameManager : IGameManager
 {
     private Dictionary<int, IBoardService> _boards = new Dictionary<int, IBoardService>();
     List<int> _selectedGames = new List<int>();
-    private int _numOfCells = 0;
     private int _numberOfGames = 0;
 
     /// <summary>
@@ -19,7 +18,6 @@ public class GameManager : IGameManager
     /// </summary>
     public void NewGame()
     {
-        _numOfCells = 0; 
         Console.Clear();
         Console.WriteLine("Please write down the maximum height of your game board:");
         try
@@ -67,6 +65,9 @@ public class GameManager : IGameManager
         }
     }
 
+    /// <summary>
+    /// Manages workflow of selecting games to be displayed in console.
+    /// </summary>
     private void SelectGames()
     {
         Console.WriteLine($"Please select which ones out of {_numberOfGames} you want to display on screen." +
@@ -146,6 +147,7 @@ public class GameManager : IGameManager
     /// <summary>
     /// Ensures that the save directory exists, creates a new one if it does not.
     /// </summary>
+    /// <returns>The directory to which files should be saved.</returns>
     private string SetSaveDirectory()
     {
         string currentDate = DateTime.Now.ToString("yyyyMMdd");
@@ -171,15 +173,21 @@ public class GameManager : IGameManager
         {
             try
             {
+                int aliveGames = 0;
+                int numOfCells = 0;
+
                 Thread.Sleep(1000);
+
                 foreach (var board in _boards.Values)
                 {
                     int aliveCells = board.CalculateAliveCells();
-                    _numOfCells += aliveCells;
+                    numOfCells += aliveCells;
+                    aliveGames += aliveCells > 0 ? 1 : 0;
                 }
 
                 Console.Clear();
-                Console.WriteLine($"Number of alive cells in all games is {_numOfCells}");
+                Console.WriteLine($"Number of alive cells in all games is {numOfCells}.");
+                Console.WriteLine($"Number of alive games from all {_numberOfGames} games is {aliveGames}.");
                 Console.WriteLine("If you want games to be saved to file, press S.");
                 Console.WriteLine("If you want to change games iterating on screen, press C.");
                 Console.WriteLine("If you want to quit this and return back to main menu, press Q.\n");
