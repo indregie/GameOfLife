@@ -1,8 +1,7 @@
-﻿namespace GameOfLife.UI.Interfaces
+﻿namespace GameOfLife.UI.Interfaces;
+
+public interface IGameManager
 {
-    public interface IGameManager
-    {
-        void LoadGame();
-        void NewGame();
-    }
+    void LoadGame();
+    void NewGame();
 }
