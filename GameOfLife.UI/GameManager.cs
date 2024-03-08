@@ -198,10 +198,8 @@ public class GameManager : IGameManager
                     _boards[boardNumber].DrawBoard();
                 }
 
-                //Console.WriteLine("wat0");
                 if (Console.KeyAvailable)
                 {
-                    //Console.WriteLine("wat1");
                     ConsoleKeyInfo key = Console.ReadKey(intercept: true);
 
                     switch (char.ToLower(key.KeyChar))
